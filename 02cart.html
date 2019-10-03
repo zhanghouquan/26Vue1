@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link type="text/css" rel="stylesheet" href="reset.css"/>
+    <style type="text/css">
+        #cartTable{margin:30px auto; border-collapse: collapse;}
+        td,th{padding:5px 10px;}
+        .txtCnt{width:30px; margin:0px 5px;}
+        button{padding:5px;}
+        .total{font-size:18px; color:darkred; font-weight:800;}
+        .yincang{display: none}
+    </style>
+    <script src="vue.js"></script>
+</head>
+<body>
+<div id="cart">
+    <table border="1" cellspacing="0" id="cartTable" >
+        <thead>
+        <tr>
+            <th><input type="checkbox" v-model="output" @click="handleChange">全选</th>
+            <th>商品序号</th>
+            <th>商品编号</th>
+            <th>商品名称</th>
+            <th>商品数量</th>
+            <th>商品单价</th>
+            <th>移出</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(item,i) in objArr">
+            <th><input type="checkbox" :value="i+1" v-model="xuanze" @click="xuanze1">选择</th>
+            <td>{{i+1}}</td>
+            <td>{{item.id}}</td>
+            <td>{{item.name}}</td>
+            <td><button @click="jian(item,i)">-</button><input v-model="item.count"  type="text" ><button @click="jia(item,i)">+</button></td>
+            <td >{{item.price*item.count}}</td>
+            <td><button @click="de(item,i)">删除</button></td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr :class="{'yincang':active==0}"><!--购物车中有商品时显示-->
+            <td colspan="7">总价为：<span class="total">{{allPrice}}</span>元</td>
+        </tr>
+        <tr :class="{'yincang':active==1}"><!--购物车中无商品时显示-->
+            <td colspan="7">此购物车中无商品</td>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+
+</body>
+<script>
+
+    new Vue({
+        el:"#cart",
+        data:{
+            output:true,
+            xuanze:[1,2,3,4],
+            active:1,
+            objArr:[
+                {id:'0001',name:'iphone11',count:1,price:6188},
+                {id:'0002',name:'华为mate30',count:2,price:5934},
+                {id:'0003',name:'小米MIX Alpha',count:1,price:19999},
+                {id:'0004',name:'三星Galaxy s10',count:3,price:6399}
+            ]
+        },
+        created:function () {
+            var Price=0;
+            var list= this.objArr;
+            for (var i=0;i<list.length;i++)
+            {
+                Price+=list[i].price*list[i].count
+            }
+            this.allPrice=Price;
+        },
+        computed:{
+            duoxuan(){
+                var h=0;
+                this.xuanze.forEach(function (item) {
+                    h+=parseInt(item);
+                });
+                return h;
+            }
+        },
+        watch:{
+            duoxuan() {
+                if (this.duoxuan==10)
+                {
+                    this.output=true;
+                }else {this.output=false}
+            }
+        },
+        methods: {
+            handleChange(){
+                if(this.output==false) {this.xuanze=[1,2,3,4];}
+
+                else{this.xuanze=[]}
+            }
+            ,
+            update:function () {
+                var Price=0;
+                var list=this.objArr;
+                for (var i=0;i<list.length;i++)
+                {
+                    Price+=list[i].price*list[i].count
+                }
+                this.allPrice=Price;
+            },
+            jian(item,i) {
+                if(item.count>1){
+                item.count--;
+                }
+                this.update();
+
+            },
+            jia(item,i){
+
+               item.count++;
+              this.update();
+           },
+            de(item)
+            {
+                this.objArr.splice(item,1);
+                console.log(this.objArr.length);
+               if(this.objArr.length==0)
+               {
+                   this.active=0
+               }else{this.active=1}
+
+                console.log(this.active);
+                this.update()
+            }
+        },
+
+
+    })
+
+</script>
+</html>

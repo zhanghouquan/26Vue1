@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="vue.js"></script>
+    <style type="text/css">
+        *{margin:0px; padding:0px;}
+        body{font-size:14px;}
+        #app{width:1000px; margin:10px auto;}
+        #bigImg{float:left; margin-right:10px;}
+        .item{
+            width:340px;
+            line-height:30px;
+            box-sizing: border-box;
+            background:#f7f7f7;
+            border:1px solid #f7f7f7;
+            margin:10px 0px;
+            float:left;
+        }
+        .item img{vertical-align:middle; margin-right:10px;}
+        .select{ border:1px solid darkred;}
+    </style>
+</head>
+<body>
+<div id="app">
+    <img id="bigImg" :src="dizi"/>
+    <p>颜色选择</p>
+    <div v-for="(item,i) in objArr" @click="change(item,i)" :class="{'select':active==i}"><img :src="item.img" width="60" height="60"/>{{item.txt}}</div>
+</div>
+<script>
+
+
+    new Vue({
+        el:"#app",
+        data: {
+            dizi:"image/tu1.png",
+            active:-1,
+            objArr:[{
+                img:'image/tu2.png',
+                txt:'黑色'
+            },
+                {
+                    img:'image/tu3.png',
+                    txt:'绿色'
+                },
+                {
+                    img:'image/tu4.png',
+                    txt:'紫色'
+                },
+                {
+                    img:'image/tu5.png',
+                    txt:'白色'
+                }
+
+            ]
+        },
+        methods:{
+            change(item,i) {
+                   this.active=i;
+                   this.dizi=item.img
+
+            }
+        }
+
+    })
+
+
+</script>
+</body>
+</html>
